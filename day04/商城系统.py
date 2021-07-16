@@ -110,6 +110,7 @@ while count:
 # 打印发票
 sum = 0
 print("-" * 24, "消费票据", "-" * 23)
+
 for index, value in enumerate(my_cart, 1):
     print(index, " ", value)
 for index, value in my_cart:
@@ -120,6 +121,7 @@ if sta:
         print("已使用一张", shop[appoint1][0], "的", int(discount1*100), "折优惠券")
     if not state2:
         print("已使用一张", shop[appoint2][0], "的", int(discount2 * 100), "折优惠券")
+
 print("消费金额：￥", sum)
 print("剩余余额：￥", salary)
 print("-" * 56)
