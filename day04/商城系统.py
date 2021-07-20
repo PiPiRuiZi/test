@@ -80,7 +80,7 @@ while count:
     # 选择商品（资金够将放入购物车）
     num = input("请输入您要购买的商品编号：")
 
-    if num.isdigit():  # 判断输入类型
+    if num.isdigit():  # 判断字符串是否只由数字组成
         num = int(num) - 1
         if num >= len(shop) or num < 0:  # 判断商品编号是否存在
             print("对不起！您输入的商品不存在")
@@ -110,6 +110,7 @@ while count:
 # 打印发票
 sum = 0
 print("-" * 24, "消费票据", "-" * 23)
+
 for index, value in enumerate(my_cart, 1):
     print(index, " ", value)
 for index, value in my_cart:
@@ -120,6 +121,7 @@ if sta:
         print("已使用一张", shop[appoint1][0], "的", int(discount1*100), "折优惠券")
     if not state2:
         print("已使用一张", shop[appoint2][0], "的", int(discount2 * 100), "折优惠券")
+
 print("消费金额：￥", sum)
 print("剩余余额：￥", salary)
 print("-" * 56)
