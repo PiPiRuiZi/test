@@ -45,38 +45,38 @@ def alone_sum(workbook):
 
 wb = xlrd.open_workbook(filename="2020年每个月的销售情况.xlsx", encoding_override=True)  # 打开工作簿
 
-# 每月的销售总金额
+# 1.每月的销售总金额
 li = sheet_sum(wb)  # 调用sheet_sum()方法
 li_len = len(li)  # 获取列表长度
 for key, value in enumerate(li, 1):
     print(key, "月的销售总额为：￥%.2f" % value)
 print("-" * 40)
 
-# 全年的销售总金额
+# 2.全年的销售总金额
 sale_sum = 0
 for i in li:
     sale_sum += i
 print("全年的销售总金额为：￥%.2f" % sale_sum)
 print("-" * 40)
 
-# 每种衣服的销售总金额
-last_dt = alone_sum(wb)
+# 3.每种衣服的销售总金额
+last_dt = alone_sum(wb)  # 调用alone_sum()方法
 dt_len = len(last_dt)
 for key in last_dt:
     print(key, "的销售总金额为：￥%.2f" % last_dt[key][0])  # 全年销售金额
 print("-" * 40)
 
-# 每个季度销售总金额占比
+# 4.每个季度销售总金额占比
 qua_sum = [0, 0, 0, 0]  # 声明季度总和
 for i in range(li_len):
     t = i // 3
     qua_sum[t] += li[i]
 
 for key, value in enumerate(qua_sum, 1):
-    print("第", key, "季度的销售金额为：￥%.2f" % value)
+    print("第", key, "季度的销售金额占比为：￥%.2f" % (value/sale_sum*100), "%")
 print("-" * 40)
 
-# 全年每种销售总数量占比
+# 5.全年每种销售总数量占比
 sale_num = 0  # 声明销售总数量
 for key in last_dt:
     sale_num += last_dt[key][1]  # 累加销售数量
