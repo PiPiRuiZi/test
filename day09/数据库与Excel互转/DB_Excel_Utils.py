@@ -58,6 +58,7 @@ class Transform:
     # 公用create sql语句拼接方法
     def concat_create_sql(self, sql, names):
         # 数据类型
+        tag = 0
         for val in names:
             if val[1] == 0:  # empty 空
                 val[1] = "varchar(50)"
@@ -71,39 +72,56 @@ class Transform:
                 val[1] = "tinyint(1)"
             else:  # Error
                 val[1] = "varchar(50)"
+            if val[0] == '':
+                val[0] = 'NULL' + str(tag)
+                tag += 1
 
         for i in range(len(names)):
             if i == len(names) - 1:
                 sql = sql + "`" + names[i][0] + "`" + " " + names[i][1] + ")"
             else:
                 sql = sql + "`" + names[i][0] + "`" + " " + names[i][1] + ", "
+
         return sql
 
-    # excel转数据库，自动创建表，生成表头，数据类型自动生成，前提是手动传入数据库
-    def excel2db(self, file_path):
+    # excel转数据库，自动创建表，生成表头，数据类型自动生成，前提是手动传入数据库，文件地址和表头所在行
+    def excel2db(self, file_path, top_row = 1):
         wb = xlrd.open_workbook(file_path, encoding_override=True)
         st_names = wb.sheet_names()  # 获取所有选项卡名称
         conn = pymysql.connect(host=self.host, user=self.user, passwd=self.passwd, db=self.db)
         cur = conn.cursor()
         # 导入到数据库
-        for val in tqdm(st_names, desc="导入到数据库中"):
+        for val in st_names:
             # 录入表头
             sheet = wb.sheet_by_name(val)
-            tmp_name = sheet.row_values(0)  # 获取首行字段名称
+            if sheet.nrows < top_row:
+                return
+            tmp_name = sheet.row_values(top_row-1)  # 获取表头字段名称
             top_li = []
             for i in range(len(tmp_name)):
-                top_li.append([tmp_name[i], sheet.cell(1, i).ctype])  # 获取字段名和字段类型
+                top_li.append([tmp_name[i], sheet.cell(top_row, i).ctype])  # 获取字段名和字段类型
             sql = "create table if not exists {}(".format(val)
             sql = self.concat_create_sql(sql, top_li)
-            cur.execute(sql)
+            # print(sql)
+            try:
+                cur.execute(sql)
+            except Exception as e:
+                print("create执行失败！错误是：", e)
+                return
             conn.commit()
             # 录入数据
             rows = sheet.nrows
-            for i in range(1, rows):
+            for i in tqdm(range(top_row, rows), desc="导入到数据库中"):
                 tmp_li = sheet.row_values(i)
                 sql = "insert into {} values(".format(val)
                 sql = self.concat_insert_sql(sql, tmp_li)
-                cur.execute(sql, tmp_li)
+                try:
+                    cur.execute(sql, tmp_li)
+                except Exception as e:
+                    print("insert into执行失败！错误是：", e)
+                    if str(e) == """(1136, "Column count doesn't match value count at row 1")""":
+                        print("数据库有冲突的表，请先删除表或者对sheet重命名")
+                    return
                 conn.commit()
         cur.close()
         conn.close()
