@@ -51,7 +51,8 @@ def send_email():
 
     msg.attach(part)  # 附加
     msg.attach(part1)  # 附加
-
+    
+    # 添加图片附件
     dir = os.listdir("images")
     print(dir)
     for d in dir:
