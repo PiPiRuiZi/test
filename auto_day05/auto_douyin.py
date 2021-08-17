@@ -4,6 +4,11 @@
 # @Email   : rui.999@foxmail.com
 # @File    : auto_douyin.py
 # @Software: PyCharm
+"""
+    已知问题：
+        抖音会有各种弹窗，比如软件更新提醒，青少年提醒弹窗等等
+        一旦弹出，便无法自动化刷视频
+"""
 import time
 from appium import webdriver
 
