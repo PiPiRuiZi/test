@@ -2,7 +2,7 @@
 # @Time    : 2021/08/16 15:37
 # @Author  : ZhaoRui
 # @Email   : rui.999@foxmail.com
-# @File    : 知乎.py
+# @File    : auto_douyin.py
 # @Software: PyCharm
 import time
 from appium import webdriver
