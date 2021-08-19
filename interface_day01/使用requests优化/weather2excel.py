@@ -6,7 +6,6 @@
 # @Software: PyCharm
 import requests
 import xlwt
-import json
 
 
 # 获取请求和响应，返回列表
